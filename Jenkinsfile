@@ -13,6 +13,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building project...'
+                sh 'chmod +x mvnw'
                 sh './mvnw clean package'
             }
         }
@@ -21,13 +22,6 @@ pipeline {
             steps {
                 echo 'Running tests...'
                 sh './mvnw test'
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t calculator-app .'
             }
         }
     }
