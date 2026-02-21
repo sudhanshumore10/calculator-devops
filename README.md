@@ -2,23 +2,23 @@
 
 This project demonstrates a complete end-to-end DevOps CI/CD pipeline using:
 
-Spring Boot
+- Spring Boot (just for package management)
 
-Maven
+- Maven
 
-Jenkins
+- Jenkins
 
-SonarQube
+- SonarQube
 
-Docker
+- Docker
 
-Amazon ECR
+- Amazon ECR
 
-Amazon ECS (EC2 Launch Type)
+- Amazon ECS (EC2 Launch Type)
 
-Terraform (Infrastructure as Code)
+- Terraform (Infrastructure as Code)
 
-GitHub Webhooks
+- GitHub Webhooks
 
 📌 Project Architecture
 
@@ -30,6 +30,9 @@ Flow:
 Developer → Git Push → Webhook → Jenkins → Build → Test → SonarQube → Quality Gate → Docker Build → Push to ECR → Deploy to ECS → Application Running
 
 Infrastructure is provisioned using Terraform.
+
+
+
 
 
 
@@ -51,6 +54,7 @@ REST endpoints:
 Built using Maven
 
 Packaged as executable JAR
+
 
 
 🔹 Phase 2 – Infrastructure Provisioning (Terraform)
@@ -80,6 +84,7 @@ ECS Cluster & Service
 Terraform ensures infrastructure is reproducible and version-controlled.
 
 
+
 🔹 Phase 3 – Jenkins Setup (CI Server)
 
 Installed Jenkins on EC2
@@ -103,6 +108,7 @@ ECS update permissions
 Jenkins acts as the CI/CD orchestrator.
 
 
+
 🔹 Phase 4 – Continuous Integration Pipeline
 
 Created Jenkins Pipeline with stages:
@@ -118,6 +124,7 @@ SonarQube Analysis
 Quality Gate Validation
 
 Pipeline is triggered automatically via GitHub Webhook.
+
 
 
 🔹 Phase 5 – Code Quality & Quality Gate
@@ -139,6 +146,7 @@ Pipeline waits for Quality Gate result before deployment.
 If gate fails → deployment stops.
 
 
+
 🔹 Phase 6 – Containerization & Registry
 
 Dockerized Spring Boot application
@@ -157,6 +165,7 @@ Example tagging format:
 
 calculator-repo:20260221051357
 calculator-repo:latest
+
 
 
 🔹 Phase 7 – Continuous Deployment (ECS)
@@ -181,6 +190,8 @@ Application publicly accessible on port 8080
 
 
 
+
+
 🔁 Automated Flow
 
 Developer pushes code to GitHub
@@ -198,6 +209,8 @@ Image pushed to ECR
 ECS deploys updated container
 
 Application updated automatically
+
+
 
 
 
@@ -221,6 +234,8 @@ Immutable Infrastructure Concept
 
 
 
+
+
 ☁️ AWS Services Used
 
 EC2
@@ -234,6 +249,8 @@ IAM
 VPC
 
 Security Groups
+
+
 
 
 📂 Repository Structure
@@ -251,6 +268,8 @@ calculator/
     ├── ecs.tf
     ├── ecr.tf
     └── iam.tf
+
+
 
 
 🏁 Final Outcome
