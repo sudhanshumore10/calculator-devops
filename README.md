@@ -1,259 +1,375 @@
-🚀 Calculator DevOps CI/CD Project
+# 🚀 Calculator DevOps CI/CD Pipeline Project
 
-This project demonstrates a complete end-to-end DevOps CI/CD pipeline using:
+A complete end-to-end DevOps project demonstrating the implementation of a CI/CD pipeline for a Spring Boot application using Jenkins, SonarQube, Docker, Terraform, Amazon ECR, Amazon ECS, and GitHub Webhooks.
 
-- Spring Boot (just for package management)
+---
 
-- Maven
+# 📖 Overview
 
-- Jenkins
+This project demonstrates how modern DevOps practices can automate the software delivery lifecycle from source code commit to production deployment.
 
-- SonarQube
+The project uses a simple Spring Boot Calculator Application as the workload while focusing on building a production-style CI/CD pipeline and cloud infrastructure.
 
-- Docker
+The primary objective is to automate:
 
-- Amazon ECR
+* Application Build
+* Automated Testing
+* Code Quality Analysis
+* Containerization
+* Infrastructure Provisioning
+* Container Registry Management
+* Continuous Deployment
+* Cloud Infrastructure Management
 
-- Amazon ECS (EC2 Launch Type)
+The entire infrastructure is provisioned using Terraform, making the deployment reproducible, scalable, and version-controlled.
 
-- Terraform (Infrastructure as Code)
+---
 
-- GitHub Webhooks
+# 🎯 Project Objective
 
-📌 Project Architecture
+Traditional application deployment involves multiple manual steps that are prone to human error.
+
+This project automates the complete deployment workflow by implementing:
+
+* Continuous Integration (CI)
+* Continuous Delivery/Deployment (CD)
+* Infrastructure as Code (IaC)
+* Automated Code Quality Checks
+* Docker Containerization
+* AWS Cloud Deployment
+* Automated Rolling Updates
+
+---
+
+# 🏗️ Project Architecture
 
 ![Architecture-Pipeline-1](https://github.com/user-attachments/assets/5081b581-8cf2-46e7-bc9e-9da51fe48624)
 
+### Pipeline Flow
+
+```text
+Developer
+    │
+    ▼
+GitHub Repository
+    │
+    ▼
+GitHub Webhook
+    │
+    ▼
+Jenkins Pipeline
+    │
+ ┌──┼──────────────────────┐
+ ▼  ▼                      ▼
+Build Test           SonarQube Analysis
+    │                      │
+    └──────────────┬───────┘
+                   ▼
+            Quality Gate
+                   │
+          Pass     │     Fail
+           ▼       │
+    Docker Build   │
+           │       │
+           ▼       │
+      Push to ECR  │
+           │       │
+           ▼       │
+      Deploy ECS   │
+           │       │
+           ▼       │
+    Running Application
+```
 
-Flow:
+---
 
-Developer → Git Push → Webhook → Jenkins → Build → Test → SonarQube → Quality Gate → Docker Build → Push to ECR → Deploy to ECS → Application Running
+# 🏗️ 7 Phases of Implementation
 
-Infrastructure is provisioned using Terraform.
+## 🔹 Phase 1 – Application Development
 
+Developed a Spring Boot Calculator REST API.
 
+### Features
 
+* Addition
+* Subtraction
+* Multiplication
+* Division
 
+### REST Endpoints
 
+```http
+/api/add
+/api/subtract
+/api/multiply
+/api/divide
+```
 
-🏗 7 Phases of Implementation
-🔹 Phase 1 – Application Development
+### Testing
 
-Developed a simple Spring Boot Calculator API
+Implemented comprehensive JUnit test cases covering:
 
-REST endpoints:
+* Positive inputs
+* Negative inputs
+* Zero values
+* Edge cases
+* Application context validation
 
-/add
+Total Tests: 21
 
-/subtract
+---
 
-/multiply
+## 🔹 Phase 2 – Infrastructure Provisioning (Terraform)
 
-/divide
+Provisioned AWS infrastructure using Terraform.
 
-Built using Maven
+### Resources Created
 
-Packaged as executable JAR
+* VPC
+* Public Subnet
+* Internet Gateway
+* Route Tables
+* Security Groups
+* IAM Roles
+* EC2 Instances
+* ECR Repository
+* ECS Cluster
+* ECS Service
 
+### Benefits
 
+* Infrastructure as Code
+* Reproducible deployments
+* Version-controlled infrastructure
+* Automated provisioning
 
-🔹 Phase 2 – Infrastructure Provisioning (Terraform)
+---
 
-Provisioned AWS infrastructure using Terraform:
+## 🔹 Phase 3 – Jenkins Setup
 
-VPC
+Configured Jenkins as the CI/CD orchestration platform.
 
-Public Subnet
+### Installed Components
 
-Internet Gateway
+* Git
+* Maven
+* Docker
+* AWS CLI
 
-Security Groups
+### IAM Permissions
 
-IAM Roles
+Configured Jenkins for:
 
-EC2 (Jenkins)
+* Amazon ECR access
+* ECS deployment permissions
+* Infrastructure interaction
 
-EC2 (SonarQube)
+---
 
-EC2 (ECS Node)
+## 🔹 Phase 4 – Continuous Integration Pipeline
 
-ECR Repository
+Implemented Jenkins Pipeline as Code.
 
-ECS Cluster & Service
+### Pipeline Stages
 
-Terraform ensures infrastructure is reproducible and version-controlled.
+1. Checkout Source Code
+2. Maven Build
+3. Unit Testing
+4. SonarQube Analysis
+5. Quality Gate Validation
 
+### Trigger Mechanism
 
+GitHub Webhooks automatically trigger builds whenever code is pushed.
 
-🔹 Phase 3 – Jenkins Setup (CI Server)
+---
 
-Installed Jenkins on EC2
+## 🔹 Phase 5 – Code Quality & Static Analysis
 
-Configured:
+Integrated SonarQube for continuous code quality monitoring.
 
-Git
+### Quality Checks
 
-Maven
+* Bugs
+* Vulnerabilities
+* Code Smells
+* Test Coverage
+* Maintainability Issues
 
-Docker
+### Quality Gate
 
-AWS CLI
+Deployment proceeds only when the Quality Gate passes.
 
-Configured IAM role for:
+If the gate fails:
 
-ECR access
+```text
+Build → Test → SonarQube → FAIL
+                         ↓
+                 Deployment Blocked
+```
 
-ECS update permissions
+---
 
-Jenkins acts as the CI/CD orchestrator.
+## 🔹 Phase 6 – Containerization & Registry
 
+Dockerized the Spring Boot application.
 
+### Docker Features
 
-🔹 Phase 4 – Continuous Integration Pipeline
+* Consistent runtime environment
+* Portable deployment
+* Easy scaling
+* Immutable deployments
 
-Created Jenkins Pipeline with stages:
+### Image Tagging Strategy
 
-Checkout Code
-
-Build (Maven)
-
-Unit Test
-
-SonarQube Analysis
-
-Quality Gate Validation
-
-Pipeline is triggered automatically via GitHub Webhook.
-
-
-
-🔹 Phase 5 – Code Quality & Quality Gate
-
-Integrated SonarQube:
-
-Static Code Analysis
-
-Bug detection
-
-Code Smell detection
-
-Coverage monitoring
-
-Quality Gate enforcement
-
-Pipeline waits for Quality Gate result before deployment.
-
-If gate fails → deployment stops.
-
-
-
-🔹 Phase 6 – Containerization & Registry
-
-Dockerized Spring Boot application
-
-Image tagging strategy:
-
-timestamp
-
-latest
-
-Pushed images to:
-
-Amazon ECR
-
-Example tagging format:
-
-calculator-repo:20260221051357
+```text
 calculator-repo:latest
+calculator-repo:20260221051357
+```
 
+### Registry
 
+Amazon Elastic Container Registry (ECR)
 
-🔹 Phase 7 – Continuous Deployment (ECS)
+Stores:
 
-ECS Cluster (EC2 Launch Type)
+* Latest image
+* Historical image versions
 
-Desired Count: 1
+---
 
-Jenkins triggers:
+## 🔹 Phase 7 – Continuous Deployment (ECS)
 
+Implemented automated deployment using Amazon ECS (EC2 Launch Type).
+
+### Deployment Process
+
+Jenkins executes:
+
+```bash
 aws ecs update-service --force-new-deployment
+```
 
-ECS:
+ECS then:
 
-Pulls latest image from ECR
+* Pulls latest image from ECR
+* Replaces old container
+* Starts new container
+* Maintains service availability
 
-Replaces old container
+### Deployment Characteristics
 
-Runs new version
+* Rolling deployment
+* Minimal downtime
+* Automated container replacement
 
-Application publicly accessible on port 8080
+---
 
+# 🔁 Automated Workflow
 
+```text
+Developer Pushes Code
+          │
+          ▼
+GitHub Webhook Trigger
+          │
+          ▼
+Jenkins Pipeline
+          │
+          ▼
+Build & Unit Tests
+          │
+          ▼
+SonarQube Analysis
+          │
+          ▼
+Quality Gate Check
+          │
+          ▼
+Docker Build
+          │
+          ▼
+Push Image to ECR
+          │
+          ▼
+ECS Deployment
+          │
+          ▼
+Application Updated
+```
 
+---
 
+# 🧠 Key DevOps Concepts Implemented
 
-🔁 Automated Flow
+* Continuous Integration (CI)
+* Continuous Deployment (CD)
+* Infrastructure as Code (Terraform)
+* GitOps Workflow
+* Docker Containerization
+* Automated Testing
+* Static Code Analysis
+* Quality Gate Enforcement
+* Container Registry Management
+* Rolling Deployment Strategy
+* AWS Cloud Deployment
+* Immutable Infrastructure
 
-Developer pushes code to GitHub
+---
 
-GitHub Webhook triggers Jenkins
+# ☁️ AWS Services Used
 
-Jenkins runs pipeline
+| Service         | Purpose                              |
+| --------------- | ------------------------------------ |
+| EC2             | Jenkins, SonarQube, ECS Worker Nodes |
+| ECR             | Docker Image Registry                |
+| ECS             | Container Orchestration              |
+| IAM             | Access Management                    |
+| VPC             | Networking                           |
+| Security Groups | Firewall Rules                       |
 
-SonarQube validates code quality
+---
 
-Docker image is built
+# 🛠️ Technology Stack
 
-Image pushed to ECR
+## Backend
 
-ECS deploys updated container
+* Java 17
+* Spring Boot
+* Maven
+* JUnit
 
-Application updated automatically
+## DevOps
 
+* Git
+* GitHub
+* Jenkins
+* SonarQube
+* Docker
+* Terraform
 
+## Cloud
 
+* AWS EC2
+* AWS ECR
+* AWS ECS
+* IAM
+* VPC
 
+## Development Tools
 
-🧠 Key DevOps Concepts Implemented
+* VS Code
+* Docker Desktop
+* Git Bash
+* PowerShell
+* WSL2
 
-Infrastructure as Code (Terraform)
+---
 
-CI/CD Automation
+# 📂 Repository Structure
 
-Webhook Triggering
-
-Code Quality Gates
-
-Docker Image Versioning
-
-AWS IAM Roles & Security
-
-ECS Rolling Deployment
-
-Immutable Infrastructure Concept
-
-
-
-
-
-☁️ AWS Services Used
-
-EC2
-
-ECR
-
-ECS
-
-IAM
-
-VPC
-
-Security Groups
-
-
-
-
-📂 Repository Structure
+```bash
 calculator/
 │
 ├── src/
@@ -268,20 +384,38 @@ calculator/
     ├── ecs.tf
     ├── ecr.tf
     └── iam.tf
+```
 
+---
 
-
-
-🏁 Final Outcome
+# 🏁 Final Outcome
 
 ✔ Fully automated CI/CD pipeline
+
 ✔ Infrastructure provisioned via Terraform
-✔ Quality Gate enforced
-✔ Docker image versioned
+
+✔ Automated code quality validation
+
+✔ Docker image versioning strategy
+
+✔ Amazon ECR integration
+
 ✔ Automatic ECS deployment
+
 ✔ Zero manual deployment steps
 
+✔ Production-style DevOps workflow
 
-👨‍💻 Author
+---
 
-Sudhanshu More
+# 👨‍💻 Author
+
+**Sudhanshu More**
+
+GitHub: https://github.com/sudhanshumore10
+
+---
+
+# 📄 License
+
+This project was developed for educational and learning purposes to demonstrate modern DevOps practices including CI/CD, Infrastructure as Code, containerization, cloud deployment, and automation.
